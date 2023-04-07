@@ -15,7 +15,7 @@ import com.neotica.camerareference.databinding.ActivityCameraBinding
 
 class CameraActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCameraBinding
-    //Step 1 initialize imagecapture and cameraselector
+    //Step 1 initialize imageCapture and cameraSelector
     private var imageCapture: ImageCapture? = null
     private var cameraSelector: CameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 
@@ -26,7 +26,12 @@ class CameraActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.captureImage.setOnClickListener { takePhoto() }
-        binding.switchCamera.setOnClickListener { startCamera() }
+        binding.switchCamera.setOnClickListener {
+            //Step 9
+            cameraSelector = if (cameraSelector.equals(CameraSelector.DEFAULT_BACK_CAMERA)) CameraSelector.DEFAULT_FRONT_CAMERA
+            else CameraSelector.DEFAULT_BACK_CAMERA
+            startCamera()
+        }
     }
 
     public override fun onResume() {
