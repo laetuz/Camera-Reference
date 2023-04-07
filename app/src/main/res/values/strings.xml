@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Camera Reference</string>
+    <string name="camera_x">CameraX</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
+    <string name="upload">Upload</string>
 </resources>
