@@ -3,12 +3,16 @@ package com.neotica.camerareference
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.BitmapFactory
+import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.neotica.camerareference.databinding.ActivityMainBinding
+import java.io.File
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -55,7 +59,26 @@ class MainActivity : AppCompatActivity() {
     private fun startCameraX() {
         //Step 3 setup intent
         val intent = Intent(this, CameraActivity::class.java)
-        startActivity(intent)
+        //Step 11.1
+        launcherIntentCameraX.launch(intent)
+    }
+
+    //Step 11
+    private val launcherIntentCameraX = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        if (it.resultCode == CAMERA_X_RESULT) {
+            val myFile = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                it.data?.getSerializableExtra("picture", File::class.java)
+            } else {
+                @Suppress("DEPRECATION")
+                it.data?.getSerializableExtra("picture")
+            } as File
+            val isBackCamera = it.data?.getBooleanExtra("isBackCamera", true) as Boolean
+            val result = BitmapFactory.decodeFile(myFile.path)
+
+            binding.previewImageView.setImageBitmap(result)
+        }
     }
 
     //Step 5 override request permission
