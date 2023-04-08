@@ -75,7 +75,10 @@ class MainActivity : AppCompatActivity() {
                 it.data?.getSerializableExtra("picture")
             } as File
             val isBackCamera = it.data?.getBooleanExtra("isBackCamera", true) as Boolean
-            val result = BitmapFactory.decodeFile(myFile.path)
+            //Step 12 add the rotation bitmap
+            val result = rotateBitmap(
+                BitmapFactory.decodeFile(myFile.path), isBackCamera
+            )
 
             binding.previewImageView.setImageBitmap(result)
         }
