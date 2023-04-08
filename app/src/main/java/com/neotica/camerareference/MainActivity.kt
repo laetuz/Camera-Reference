@@ -3,19 +3,25 @@ package com.neotica.camerareference
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import com.neotica.camerareference.databinding.ActivityMainBinding
 import java.io.File
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    //Camera step 5 init currentphotopath
+    private lateinit var currentPhotoPath: String
 
     companion object {
         //Step 4
@@ -53,7 +59,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startTakePhoto() {
-        Toast.makeText(this, "Fitur ini belum tersedia", Toast.LENGTH_SHORT).show()
+        //Camera Step 2
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        //launcherIntentCamera.launch(intent)
+        //Camera Step 4
+        intent.resolveActivity(packageManager)
+
+        createTempFile(application).also {
+            val photoURI: Uri = FileProvider.getUriForFile(
+                this@MainActivity,
+                "com.neotica.camerareference",
+                it
+            )
+            currentPhotoPath = it.absolutePath
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+            launcherIntentCamera.launch(intent)
+        }
     }
 
     private fun startCameraX() {
@@ -61,6 +82,23 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(this, CameraActivity::class.java)
         //Step 11.1
         launcherIntentCameraX.launch(intent)
+    }
+
+    //Camera Step 1
+    private val launcherIntentCamera = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        if (it.resultCode == RESULT_OK) {
+/*            val imageBitmap = it.data?.extras?.get("data") as Bitmap
+            //Camera step 1.1: Rotate bitmap
+            val result = rotateBitmap(
+                imageBitmap
+            )*/
+            //Camera Step 6
+            val myFile = File(currentPhotoPath)
+            val resultModule = rotateBitmap(BitmapFactory.decodeFile(myFile.path))
+            binding.previewImageView.setImageBitmap(resultModule)
+        }
     }
 
     //Step 11
@@ -76,7 +114,7 @@ class MainActivity : AppCompatActivity() {
             } as File
             val isBackCamera = it.data?.getBooleanExtra("isBackCamera", true) as Boolean
             //Step 12 add the rotation bitmap
-            val result = rotateBitmap(
+            val result = rotateBitmapX(
                 BitmapFactory.decodeFile(myFile.path), isBackCamera
             )
 
