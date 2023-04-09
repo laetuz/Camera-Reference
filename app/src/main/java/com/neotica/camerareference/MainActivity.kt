@@ -24,7 +24,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var currentPhotoPath: String
 
     companion object {
-        //Step 4
         const val CAMERA_X_RESULT = 200
         private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
         private const val REQUEST_CODE_PERMISSIONS = 10
@@ -40,7 +39,6 @@ class MainActivity : AppCompatActivity() {
         binding.galleryButton.setOnClickListener { startGallery() }
         binding.uploadButton.setOnClickListener { uploadImage() }
 
-        //Step 8 initialize the permission on onCreate
         if (!allPermissionsGranted()) {
             ActivityCompat.requestPermissions(
                 this,
@@ -78,9 +76,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startCameraX() {
-        //Step 3 setup intent
         val intent = Intent(this, CameraActivity::class.java)
-        //Step 11.1
         launcherIntentCameraX.launch(intent)
     }
 
@@ -101,7 +97,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    //Step 11
     private val launcherIntentCameraX = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) {
@@ -113,7 +108,6 @@ class MainActivity : AppCompatActivity() {
                 it.data?.getSerializableExtra("picture")
             } as File
             val isBackCamera = it.data?.getBooleanExtra("isBackCamera", true) as Boolean
-            //Step 12 add the rotation bitmap
             val result = rotateBitmapX(
                 BitmapFactory.decodeFile(myFile.path), isBackCamera
             )
@@ -122,14 +116,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    //Step 5 override request permission
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        //Step 6 create the condition
         if (requestCode == REQUEST_CODE_PERMISSIONS) {
             if (!allPermissionsGranted()) {
                 Toast.makeText(
@@ -141,7 +133,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-    //Step 7 create a function to grant all permissions
     private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
         ContextCompat.checkSelfPermission(baseContext, it) == PackageManager.PERMISSION_GRANTED
     }

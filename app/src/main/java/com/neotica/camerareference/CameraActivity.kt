@@ -17,7 +17,6 @@ import com.neotica.camerareference.databinding.ActivityCameraBinding
 
 class CameraActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCameraBinding
-    //Step 1 initialize imageCapture and cameraSelector
     private var imageCapture: ImageCapture? = null
     private var cameraSelector: CameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 
@@ -29,7 +28,6 @@ class CameraActivity : AppCompatActivity() {
 
         binding.captureImage.setOnClickListener { takePhoto() }
         binding.switchCamera.setOnClickListener {
-            //Step 9
             cameraSelector = if (cameraSelector.equals(CameraSelector.DEFAULT_BACK_CAMERA)) CameraSelector.DEFAULT_FRONT_CAMERA
             else CameraSelector.DEFAULT_BACK_CAMERA
             startCamera()
@@ -44,7 +42,6 @@ class CameraActivity : AppCompatActivity() {
 
     private fun takePhoto() {
         // takePhoto
-        //Step 10
         val imageCapture = imageCapture ?: return
         val photoFile = createFile(application)
         val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
@@ -76,7 +73,6 @@ class CameraActivity : AppCompatActivity() {
 
     private fun startCamera() {
         // showCamera
-        //Step 2
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
 
         cameraProviderFuture.addListener({
